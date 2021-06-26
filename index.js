@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/queue', (req, res) => {
-  res.json(queue);
+  res.json(customerQueue);
 });
 
 app.listen(5000, () => {
