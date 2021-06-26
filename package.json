@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/mrafidianto/qiscus-webhook-app/issues"
   },
-  "homepage": "https://github.com/mrafidianto/qiscus-webhook-app#readme"
+  "homepage": "https://github.com/mrafidianto/qiscus-webhook-app#readme",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "express": "^4.17.1"
+  }
 }
