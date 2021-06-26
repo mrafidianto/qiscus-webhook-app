@@ -1,0 +1,19 @@
+{
+  "name": "qiscus-webhook-app",
+  "version": "1.0.0",
+  "description": "webhook for allocating agent",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrafidianto/qiscus-webhook-app.git"
+  },
+  "author": "rafidianto",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mrafidianto/qiscus-webhook-app/issues"
+  },
+  "homepage": "https://github.com/mrafidianto/qiscus-webhook-app#readme"
+}
