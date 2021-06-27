@@ -42,18 +42,19 @@ app.post('/', async (req, res) => {
     try {
       // get the free agent, only assign the room that has cutomer less than 2
       let getFreeAgent = await freeAgent();
-      let agent = getFreeAgent.data.agent;
+      let agent = getFreeAgent.data.agent ? getFreeAgent.data.agent : null;
 
       // assign free agent to customer room
-      if (agent.count < process.env.LIMIT_CUSTOMER_AGENT) {
-        let incomingCustomer = customerQueue.shift();
-        await assignAgent(agent.id, incomingCustomer.room_id);
+      if (agent) {
+        if (agent.count < process.env.MAX_CUSTOMER_AGENT) {
+          let incomingCustomer = customerQueue.shift();
+          await assignAgent(agent.id, incomingCustomer.room_id);
+        }
       }
     } catch (err) {
       console.log(err);
     }
   }
-
   res.json(data);
 });
 
@@ -136,12 +137,14 @@ app.listen(process.env.PORT, async () => {
     if (customerQueue.length > 0) {
       // get free agent
       let getFreeAgent = await freeAgent();
-      let agent = getFreeAgent.data.agent;
+      let agent = getFreeAgent.data.agent ? getFreeAgent.data.agent : null;
 
       // check if there is agent with customer less than 2
-      if (agent.count < process.env.MAX_CUSTOMER_AGENT) {
-        let incomingCustomer = customerQueue.shift();
-        await assignAgent(agent.id, incomingCustomer.room_id);
+      if (agent) {
+        if (agent.count < process.env.MAX_CUSTOMER_AGENT) {
+          let incomingCustomer = customerQueue.shift();
+          await assignAgent(agent.id, incomingCustomer.room_id);
+        }
       }
     }
   }, process.env.INTERVAL_QUEUE);
