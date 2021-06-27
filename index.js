@@ -11,7 +11,11 @@ require('dotenv').config();
 // intialize customer queue
 const customerQueue = [];
 
-// ENDPOINT
+/***********
+  ENDPOINT
+************/
+
+// entry point webhook
 app.post('/', async (req, res) => {
   let data = req.body;
 
@@ -28,7 +32,7 @@ app.post('/', async (req, res) => {
 
     // assign free agent to customer room
     if (agent.count < 2) {
-      let incomingCustomer = customerQueue.pop();
+      let incomingCustomer = customerQueue.shift();
       await assignAgent(agent.id, incomingCustomer.room_id);
     }
   } catch (err) {
@@ -38,22 +42,31 @@ app.post('/', async (req, res) => {
   res.json(data);
 });
 
+// welcome message
 app.get('/', (req, res) => {
   res.json({
     message: 'Welcome to webhook !',
   });
 });
 
+// check customer queue
 app.get('/queue', (req, res) => {
   res.json(customerQueue);
 });
 
+// check if
 app.get('/cek-agent', async (req, res) => {
   let data = await freeAgent();
   res.json(data);
 });
 
-// FUNCTION FOR REQUEST TO THE QISCUS MULTICHANNEL SERVICE
+app.post('/mark_as_resolved', (req, red) => {
+  res.json(req.body);
+});
+
+/**********************************************************
+  FUNCTION FOR REQUEST TO THE QISCUS MULTICHANNEL SERVICE
+***********************************************************/
 
 // function to get free agent
 async function freeAgent() {
@@ -106,4 +119,19 @@ async function assignAgent(agent_id, room_id) {
 
 app.listen(process.env.PORT, async () => {
   console.log('Server is running on port ' + process.env.PORT);
+
+  setInterval(async () => {
+    console.log('cek queue process');
+    if (customerQueue.length > 0) {
+      // get free agent
+      let getFreeAgent = await freeAgent();
+      let agent = getFreeAgent.data.agent;
+
+      // check if there is agent with customer less than 2
+      if (agent.count < 2) {
+        let incomingCustomer = customerQueue.shift();
+        await assignAgent(agent.id, incomingCustomer.room_id);
+      }
+    }
+  }, 60000);
 });
