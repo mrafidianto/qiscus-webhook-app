@@ -19,14 +19,15 @@ const customerQueue = [];
 app.post('/', async (req, res) => {
   let data = req.body;
 
-  let cekData = false;
+  let cekData = true;
 
-  for (let i = 0; i < customerQueue.length; i++) {
-    let custData = customerQueue[i];
-    if (custData.room_id == data.room_id) {
-      break;
-    } else {
-      cekData = true;
+  if (customerQueue.length > 0) {
+    for (let i = 0; i < customerQueue.length; i++) {
+      let custData = customerQueue[i];
+      if (custData.room_id == data.room_id) {
+        custData = false;
+        break;
+      }
     }
   }
 
