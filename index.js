@@ -31,7 +31,7 @@ app.post('/', async (req, res) => {
     let agent = getFreeAgent.data.agent;
 
     // assign free agent to customer room
-    if (agent.count < 2) {
+    if (agent.count < 1) {
       let incomingCustomer = customerQueue.shift();
       await assignAgent(agent.id, incomingCustomer.room_id);
     }
@@ -128,7 +128,7 @@ app.listen(process.env.PORT, async () => {
       let agent = getFreeAgent.data.agent;
 
       // check if there is agent with customer less than 2
-      if (agent.count < 2) {
+      if (agent.count < 1) {
         let incomingCustomer = customerQueue.shift();
         await assignAgent(agent.id, incomingCustomer.room_id);
       }
