@@ -60,10 +60,6 @@ app.get('/cek-agent', async (req, res) => {
   res.json(data);
 });
 
-app.post('/mark_as_resolved', (req, red) => {
-  res.json(req.body);
-});
-
 /**********************************************************
   FUNCTION FOR REQUEST TO THE QISCUS MULTICHANNEL SERVICE
 ***********************************************************/
