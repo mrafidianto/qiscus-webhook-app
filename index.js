@@ -19,24 +19,37 @@ const customerQueue = [];
 app.post('/', async (req, res) => {
   let data = req.body;
 
-  // add new customer to queue
-  let customer = {};
-  customer.room_id = data.room_id;
-  customer.name = data.name;
-  customerQueue.push(customer);
+  let cekData = false;
 
-  try {
-    // get the free agent, only assign the room that has cutomer less than 2
-    let getFreeAgent = await freeAgent();
-    let agent = getFreeAgent.data.agent;
-
-    // assign free agent to customer room
-    if (agent.count < 1) {
-      let incomingCustomer = customerQueue.shift();
-      await assignAgent(agent.id, incomingCustomer.room_id);
+  for (let i = 0; i < customerQueue.length; i++) {
+    let custData = customerQueue[i];
+    if (custData.room_id == data.room_id) {
+      break;
+    } else {
+      cekData = true;
     }
-  } catch (err) {
-    console.log(err);
+  }
+
+  if (cekData) {
+    // add new customer to queue
+    let customer = {};
+    customer.room_id = data.room_id;
+    customer.name = data.name;
+    customerQueue.push(customer);
+
+    try {
+      // get the free agent, only assign the room that has cutomer less than 2
+      let getFreeAgent = await freeAgent();
+      let agent = getFreeAgent.data.agent;
+
+      // assign free agent to customer room
+      if (agent.count < process.env.LIMIT_CUSTOMER_AGENT) {
+        let incomingCustomer = customerQueue.shift();
+        await assignAgent(agent.id, incomingCustomer.room_id);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   res.json(data);
@@ -124,10 +137,10 @@ app.listen(process.env.PORT, async () => {
       let agent = getFreeAgent.data.agent;
 
       // check if there is agent with customer less than 2
-      if (agent.count < 1) {
+      if (agent.count < process.env.MAX_CUSTOMER_AGENT) {
         let incomingCustomer = customerQueue.shift();
         await assignAgent(agent.id, incomingCustomer.room_id);
       }
     }
-  }, 60000);
+  }, process.env.INTERVAL_QUEUE);
 });
