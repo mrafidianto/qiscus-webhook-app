@@ -25,13 +25,14 @@ app.post('/', async (req, res) => {
     for (let i = 0; i < customerQueue.length; i++) {
       let custData = customerQueue[i];
       if (custData.room_id == data.room_id) {
-        custData = false;
+        cekData = false;
         break;
       }
     }
   }
 
   if (cekData) {
+    console.log('masuk sini');
     // add new customer to queue
     let customer = {};
     customer.room_id = data.room_id;
